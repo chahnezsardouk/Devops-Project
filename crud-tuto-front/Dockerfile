@@ -2,28 +2,32 @@
 #COPY dist/crudtuto-Front /usr/share/nginx/html
 #EXPOSE 4200:80
 
+# Use an official Node.js runtime as a parent image
+FROM node:14 as builder
 
+# Set the working directory in the container
+WORKDIR /app
 
-#FROM node:latest as build
-#WORKDIR /usr/local/app
-#COPY ./ /usr/local/app/
-#RUN npm install
-#RUN npm run build
+# Copy package.json and package-lock.json to the working directory
+COPY package*.json ./
 
+# Install Node.js dependencies
+RUN npm install
+
+# Copy the entire Angular application to the working directory
+COPY . .
+
+# Build the Angular application
+RUN ng build --prod
+
+# Use a lightweight Nginx image to serve the Angular application
 FROM nginx:alpine
-COPY --from=node /usr/local/app/dist /usr/share/nginx/html
-EXPOSE 4200:80
 
+# Copy the built Angular app from the 'builder' stage to the NGINX web server directory
+COPY --from=builder /app/dist/crudtuto-Front /usr/share/nginx/html
 
-#FROM johnpapa/angular-cli as angular-built
-#WORKDIR /usr/src/app
-#COPY package.json package.json
-#RUN npm install --silent
-#COPY . .
-#RUN ng build --prod
-#
-#FROM nginx:alpine
-#LABEL author="Preston Lamb"
-#COPY --from=angular-built /usr/src/app/dist/crudtuto-Front /usr/share/nginx/html
-#EXPOSE 80 443
-#CMD [ "nginx", "-g", "daemon off;" ]
+# Expose port 80
+EXPOSE 80
+
+# Start the Nginx web server
+CMD ["nginx", "-g", "daemon off;"]
