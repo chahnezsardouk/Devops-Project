@@ -3,17 +3,33 @@
 #EXPOSE 4200:80
 
 
-
+# Use an official Node.js runtime as a parent image
 FROM node:14 as builder
-#WORKDIR /app
-#COPY package*.json ./
-#RUN npm install
-#COPY . .
-#RUN ng build --prod
 
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy package.json and package-lock.json to the working directory
+COPY package*.json ./
+
+# Install Node.js dependencies
+RUN npm install
+
+# Copy the entire Angular application to the working directory
+COPY . .
+
+# Build the Angular application
+RUN ng build --prod
+
+# Use a lightweight Nginx image to serve the Angular application
 FROM nginx:alpine
-COPY --from=builder /app/dist/crudtuto-Front /usr/share/nginx/html
+
+# Copy the built Angular app from the 'builder' stage to the NGINX web server directory
+COPY --from=builder /app/dist/crudtuto-front /usr/share/nginx/html
+
+# Expose port 80
 EXPOSE 80
 
 # Start the Nginx web server
 CMD ["nginx", "-g", "daemon off;"]
+
