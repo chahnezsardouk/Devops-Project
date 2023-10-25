@@ -22,7 +22,7 @@ COPY . .
 FROM nginx:alpine
 
 # Copy the built Angular app from the 'builder' stage to the NGINX web server directory
-COPY --from=builder /app/dist/crudtuto-front /usr/share/nginx/html
+COPY ./html/index.html /usr/share/nginx/html
 
 # Expose port 80
 EXPOSE 80
