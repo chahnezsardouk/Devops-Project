@@ -2,7 +2,7 @@
 #COPY ./src/index.html /usr/share/nginx/html
 #EXPOSE 4200:80
 
-FROM node:12 AS build
+FROM node:14.15 AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm install -f
