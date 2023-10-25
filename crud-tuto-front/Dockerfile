@@ -10,6 +10,6 @@
 #RUN npm install
 #RUN npm run build
 
-FROM nginx:latest
+FROM nginx:alpine
 COPY --from=build /usr/local/app/dist/crudtuto-Front /usr/share/nginx/html
 EXPOSE 4200:80
