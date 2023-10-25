@@ -11,5 +11,19 @@
 #RUN npm run build
 
 FROM nginx:alpine
-COPY --from=build /usr/local/app/dist/crudtuto-Front /usr/share/nginx/html
+COPY --from=node /usr/local/app/dist /usr/share/nginx/html
 EXPOSE 4200:80
+
+
+#FROM johnpapa/angular-cli as angular-built
+#WORKDIR /usr/src/app
+#COPY package.json package.json
+#RUN npm install --silent
+#COPY . .
+#RUN ng build --prod
+#
+#FROM nginx:alpine
+#LABEL author="Preston Lamb"
+#COPY --from=angular-built /usr/src/app/dist/crudtuto-Front /usr/share/nginx/html
+#EXPOSE 80 443
+#CMD [ "nginx", "-g", "daemon off;" ]
