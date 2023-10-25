@@ -18,9 +18,6 @@ RUN npm install
 # Copy the entire Angular application to the working directory
 COPY . .
 
-# Build the Angular application
-RUN ng build --prod
-
 # Use a lightweight Nginx image to serve the Angular application
 FROM nginx:alpine
 
